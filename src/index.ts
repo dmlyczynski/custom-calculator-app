@@ -60,6 +60,16 @@ export const calculatePrice = (selectedServices: ServiceType[], selectedYear: Se
         }
     }
 
+    const hasBlurayPackage = selectedServices.includes("BlurayPackage");
+    if (hasBlurayPackage && hasVideoRecording) {
+        blurayPackageDiscount = servicePrices[selectedYear].extraBluRay;
+    }
+
+    const hasTwoDayEvent = selectedServices.includes("TwoDayEvent");
+    if (hasTwoDayEvent && (hasPhotography || hasVideoRecording)) {
+        twoDayEventDiscount = servicePrices[selectedYear].twoDayEventHandling;
+    }
+
     const discount = getDiscount(weddingSessionDiscount, blurayPackageDiscount, twoDayEventDiscount);
 
     finalPrice = basePrice - discount;
