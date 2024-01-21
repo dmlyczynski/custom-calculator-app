@@ -1,4 +1,5 @@
 import { ActionTypes } from "./ActionTypes";
+import { getDiscount } from "./getDiscount";
 import { handleDeselect } from "./handleDeselect";
 import { handleSelect } from "./handleSelect";
 
@@ -22,4 +23,16 @@ export const updateSelectedServices = (
     }
 };
 
-export const calculatePrice = (selectedServices: ServiceType[], selectedYear: ServiceYear) => ({ basePrice: 0, finalPrice: 0 });
+export const calculatePrice = (selectedServices: ServiceType[], selectedYear: ServiceYear) => {
+    let basePrice = 0;
+    let finalPrice = 0;
+    let weddingSessionDiscount = 0;
+    let blurayPackageDiscount = 0;
+    let twoDayEventDiscount = 0;
+
+    const discount = getDiscount(weddingSessionDiscount, blurayPackageDiscount, twoDayEventDiscount);
+
+    finalPrice = basePrice - discount;
+
+    return { basePrice, finalPrice };
+}
