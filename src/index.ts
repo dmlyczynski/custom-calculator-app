@@ -2,6 +2,7 @@ import { ActionTypes } from "./ActionTypes";
 import { getDiscount } from "./getDiscount";
 import { handleDeselect } from "./handleDeselect";
 import { handleSelect } from "./handleSelect";
+import { servicePrices } from "./servicePrices";
 
 export type ServiceYear = 2020 | 2021 | 2022;
 export type ServiceType = "Photography" | "VideoRecording" | "BlurayPackage" | "TwoDayEvent" | "WeddingSession";
@@ -29,6 +30,19 @@ export const calculatePrice = (selectedServices: ServiceType[], selectedYear: Se
     let weddingSessionDiscount = 0;
     let blurayPackageDiscount = 0;
     let twoDayEventDiscount = 0;
+
+    const hasPhotography = selectedServices.includes("Photography");
+    const hasVideoRecording = selectedServices.includes("VideoRecording");
+
+    if (hasPhotography && hasVideoRecording) {
+        basePrice = servicePrices[selectedYear].photographyAndVideo;
+    } else {
+        basePrice = hasPhotography
+            ? servicePrices[selectedYear].photography
+            : hasVideoRecording
+                ? servicePrices[selectedYear].videoRecording
+                : 0;
+    }
 
     const discount = getDiscount(weddingSessionDiscount, blurayPackageDiscount, twoDayEventDiscount);
 
