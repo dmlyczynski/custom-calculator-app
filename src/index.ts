@@ -19,8 +19,9 @@ export const updateSelectedServices = (
             return handleSelect(previouslySelectedServices, service);
         case ActionTypes.Deselect:
             return handleDeselect(previouslySelectedServices, service);
-        default:
-            return previouslySelectedServices;
+        default: {
+            throw Error('Unknown action: ' + type);
+        };
     }
 };
 
