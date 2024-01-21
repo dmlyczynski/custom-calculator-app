@@ -1,37 +1,39 @@
 import { ServiceType } from ".";
-import { isMainServices } from "./helpers";
+import { isMainService, isMainServices } from "./helpers";
 
-export const handleDeselect = (selectedServices: ServiceType[], service: ServiceType): ServiceType[] => {
-    if (selectedServices.includes(service)) {
-        let updatedServices: ServiceType[] = selectedServices.filter((s) => s !== service);
+export const handleDeselect = (previouslySelectedServices: ServiceType[], service: ServiceType): ServiceType[] => {
+    if (previouslySelectedServices.includes(service)) {
+        let updatedServices: ServiceType[] = previouslySelectedServices.filter((s) => s !== service);
 
         if (isMainServices(updatedServices)) {
-            return updatedServices;
+            return tryToDeselectRelatedServices(updatedServices);
         }
-
-        return updateRelatedServices(service, updatedServices);
     }
 
-    return selectedServices;
+    return previouslySelectedServices;
 };
 
-const updateRelatedServices = (service: ServiceType, updatedServices: ServiceType[]) => {
-    const releatedServices = getRelatedServices(service);
+const tryToDeselectRelatedServices = (updatedServices: ServiceType[]): ServiceType[] => {
+    return handleTwoDayEvent(updatedServices);
+};
 
-    if (releatedServices.length !== 0) {
-        updatedServices = updatedServices.filter((element) => !releatedServices.includes(element));
+const handleTwoDayEvent = (updatedServices: ServiceType[]): ServiceType[] => {
+    const TwoDayEvent = "TwoDayEvent";
+
+    if (updatedServices.includes(TwoDayEvent)) {
+        var mainServices = updatedServices.filter((serviceType: ServiceType) => {
+            if (isMainService(serviceType)) {
+                return serviceType;
+            }
+        });
+
+        if (mainServices.length < 2) {
+            return updatedServices = updatedServices.reduce((result, currentService) => {
+                if (currentService !== TwoDayEvent) result.push(currentService);
+                return result;
+            }, []);
+        }
     }
+
     return updatedServices;
-}
-
-const getRelatedServices = (mainService: ServiceType): ServiceType[] => {
-    const relatedServices: Record<ServiceType, ServiceType[]> = {
-        Photography: ["TwoDayEvent"],
-        VideoRecording: [],
-        BlurayPackage: [],
-        TwoDayEvent: [],
-        WeddingSession: [],
-    };
-
-    return relatedServices[mainService] || [];
 };

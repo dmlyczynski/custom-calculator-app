@@ -15,19 +15,19 @@ export const handleSelect = (previouslySelectedServices: ServiceType[], service:
     return [...previouslySelectedServices, service];
 };
 
-export const isServiceExistsInPreviouslySelectedServices = (service: ServiceType, selectedServices: ServiceType[]) => {
-    return selectedServices.includes(service);
+const isServiceExistsInPreviouslySelectedServices = (service: ServiceType, previouslySelectedServices: ServiceType[]): boolean => {
+    return previouslySelectedServices.includes(service);
 };
 
-export const isMainServiceExistsForRelatedService = (serviceToSelect: ServiceType, selectedServices: ServiceType[]): boolean => {
+const isMainServiceExistsForRelatedService = (serviceToSelect: ServiceType, previouslySelectedServices: ServiceType[]): boolean => {
     const relatedServices: Record<ServiceType, ServiceType[]> = {
         Photography: [],
         VideoRecording: [],
         BlurayPackage: ["VideoRecording"],
-        TwoDayEvent: ["VideoRecording", "Photography",],
+        TwoDayEvent: ["VideoRecording", "Photography", "WeddingSession"],
         WeddingSession: [],
     };
 
     const services = relatedServices[serviceToSelect] || [];
-    return selectedServices.some((service) => services.includes(service));
+    return previouslySelectedServices.some((service) => services.includes(service));
 };
