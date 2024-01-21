@@ -33,7 +33,6 @@ export const calculatePrice = (selectedServices: ServiceType[], selectedYear: Se
 
     const hasPhotography = selectedServices.includes("Photography");
     const hasVideoRecording = selectedServices.includes("VideoRecording");
-
     if (hasPhotography && hasVideoRecording) {
         basePrice = servicePrices[selectedYear].photographyAndVideo;
     } else {
@@ -42,6 +41,23 @@ export const calculatePrice = (selectedServices: ServiceType[], selectedYear: Se
             : hasVideoRecording
                 ? servicePrices[selectedYear].videoRecording
                 : 0;
+    }
+
+    const hasWeddingSession = selectedServices.includes("WeddingSession");
+    if (hasWeddingSession) {
+        basePrice += servicePrices[selectedYear].weddingSession;
+        if (selectedYear === 2020 && hasVideoRecording) {
+            weddingSessionDiscount = 300;
+        } else if (hasPhotography || hasVideoRecording) {
+            weddingSessionDiscount = 300;
+        }
+
+        if (selectedYear === 2022 && hasPhotography) {
+            basePrice -= servicePrices[selectedYear].weddingSession;
+            finalPrice = basePrice;
+
+            return { basePrice, finalPrice };
+        }
     }
 
     const discount = getDiscount(weddingSessionDiscount, blurayPackageDiscount, twoDayEventDiscount);
