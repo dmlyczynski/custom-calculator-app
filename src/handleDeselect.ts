@@ -3,7 +3,7 @@ import { isMainService, isMainServices } from "./helpers";
 
 export const handleDeselect = (previouslySelectedServices: ServiceType[], service: ServiceType): ServiceType[] => {
     if (previouslySelectedServices.includes(service)) {
-        let updatedServices: ServiceType[] = previouslySelectedServices.filter((s) => s !== service);
+        let updatedServices: ServiceType[] = [...previouslySelectedServices.filter((s) => s !== service)];
 
         if (isMainServices(updatedServices)) {
             return tryToDeselectRelatedServices(updatedServices);
